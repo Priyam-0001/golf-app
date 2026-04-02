@@ -19,7 +19,7 @@ export default function Dashboard() {
   const [selectedCharity, setSelectedCharity] = useState("");
 
   const cardStyle =
-    "bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-lg";
+    "bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-lg hover:shadow-green-500/20 transition";
 
   useEffect(() => {
     if (token) {
@@ -107,16 +107,15 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="space-y-8">
+      <div className="space-y-10">
 
-        {/* TITLE */}
-        <motion.h1
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold"
-        >
-          Dashboard
-        </motion.h1>
+        {/* HEADER */}
+        <div>
+          <h1 className="text-4xl font-bold">Welcome back 👋</h1>
+          <p className="text-gray-400">
+            Track your performance, support a cause, and win rewards.
+          </p>
+        </div>
 
         {/* SUBSCRIPTION */}
         {user && (
@@ -126,7 +125,7 @@ export default function Dashboard() {
             className={`${cardStyle} flex justify-between items-center`}
           >
             <div>
-              <h2 className="text-xl font-semibold">Subscription</h2>
+              <h2 className="text-xl font-semibold">Your Membership</h2>
 
               <p
                 className={`mt-2 ${
@@ -143,15 +142,23 @@ export default function Dashboard() {
                   Unlock rewards & support charity 🎯
                 </p>
               )}
+
+              {user.subscriptionActive && (
+                <p className="text-green-400 text-sm mt-2">
+                  You’re contributing to real-world impact ❤️
+                </p>
+              )}
             </div>
 
             {!user.subscriptionActive && (
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
                 onClick={subscribe}
                 className="bg-green-500 px-5 py-2 rounded-xl hover:bg-green-600 transition shadow"
               >
-                Subscribe
-              </button>
+                Subscribe Now
+              </motion.button>
             )}
           </motion.div>
         )}
@@ -183,14 +190,19 @@ export default function Dashboard() {
                   ))}
                 </select>
 
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   onClick={selectCharity}
                   className="bg-green-500 px-4 rounded hover:bg-green-600"
                 >
                   Select
-                </button>
+                </motion.button>
               </div>
             )}
+
+            <p className="text-sm text-gray-400 mt-2">
+              Every entry contributes to a better world 🌍
+            </p>
           </motion.div>
         )}
 
@@ -205,16 +217,31 @@ export default function Dashboard() {
           >
             <h2 className="text-xl font-semibold mb-4">Your Scores</h2>
 
+            <p className="text-sm text-gray-400 mb-1">
+              {scores.length}/5 scores used
+            </p>
+
+            <div className="w-full bg-gray-800 rounded h-2 mb-3">
+              <div
+                className="bg-green-500 h-2 rounded"
+                style={{ width: `${(scores.length / 5) * 100}%` }}
+              />
+            </div>
+
+            <p className="text-xs text-gray-500 mb-3">
+              Adding a new score will replace your oldest score
+            </p>
+
             <div className="flex gap-2 mb-4">
               <input
                 type="number"
                 value={newScore}
                 onChange={(e) => setNewScore(e.target.value)}
                 className="w-full p-2 rounded bg-black/40 border border-white/10"
-                placeholder="Enter score"
               />
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={addScore}
                 disabled={!user?.subscriptionActive || loading}
                 className={`px-4 rounded-xl ${
@@ -224,18 +251,25 @@ export default function Dashboard() {
                 }`}
               >
                 {loading ? "..." : "Add"}
-              </button>
+              </motion.button>
             </div>
 
             {scores.length === 0 && (
-              <p className="text-gray-400 text-sm">No scores yet</p>
+              <div className="text-center py-4">
+                <p className="text-gray-400">No scores yet</p>
+                <p className="text-sm text-gray-500">
+                  Add your first score to start competing
+                </p>
+              </div>
             )}
 
             <div className="space-y-2">
-              {scores.map((s) => (
+              {scores.map((s, i) => (
                 <div
                   key={s._id}
-                  className="flex justify-between bg-black/40 p-2 rounded"
+                  className={`flex justify-between p-2 rounded ${
+                    i === 0 ? "bg-green-500/20" : "bg-black/40"
+                  }`}
                 >
                   <span>{s.value}</span>
                   <span className="text-sm text-gray-400">
@@ -249,7 +283,6 @@ export default function Dashboard() {
           {/* DRAW */}
           <motion.div
             whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 200 }}
             className={cardStyle}
           >
             <h2 className="text-xl font-semibold mb-4">Latest Draw</h2>
@@ -259,7 +292,7 @@ export default function Dashboard() {
                 <motion.div
                   key={i}
                   whileHover={{ scale: 1.2 }}
-                  className="w-12 h-12 flex items-center justify-center bg-green-500 rounded-full font-bold shadow"
+                  className="w-12 h-12 flex items-center justify-center bg-green-500 rounded-full font-bold"
                 >
                   {n}
                 </motion.div>
@@ -270,13 +303,12 @@ export default function Dashboard() {
           {/* WINNINGS */}
           <motion.div
             whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 200 }}
             className={cardStyle}
           >
             <h2 className="text-xl font-semibold mb-4">Your Winnings</h2>
 
             {winnings.length === 0 && (
-              <p className="text-gray-400 text-sm">No winnings yet</p>
+              <p className="text-gray-400">No winnings yet</p>
             )}
 
             <div className="space-y-3">

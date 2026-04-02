@@ -1,4 +1,5 @@
 import express from "express";
+import { getAdminStats } from "../controllers/adminController.js";
 import {
     getAllUsers,
     subscribe,

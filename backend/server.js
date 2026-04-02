@@ -9,6 +9,7 @@ import drawRoutes from "./routes/drawRoutes.js";
 import winnerRoutes from "./routes/winnerRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import charityRoutes from "./routes/charityRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 dotenv.config();
 
@@ -30,5 +31,6 @@ app.use("/api/draws", drawRoutes);
 app.use("/api/winners", winnerRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/charities", charityRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.listen(5000, "0.0.0.0", () => console.log("Server running"));
